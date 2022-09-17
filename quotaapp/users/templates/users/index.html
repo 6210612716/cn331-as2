@@ -24,7 +24,7 @@
                         <li><h5>Username: &nbsp;<i>{{ request.user.username }}</i></h5></li>
                         <li><h5>Email: &nbsp;<i>{{ request.user.email }}</i></h5></li>
                     </ul>
-                    
+                    <br>
                     <h2>Student List</h2>
                     {% for std in all_students %}
                         {% if std.is_superuser %} 
@@ -37,7 +37,7 @@
                     {% endfor %}
 
                     <br><br>
-                    <a href="/admin" class="button1">Edit Courses at Admin page</a>
+                    <a href="/admin" class="btn btn-info btn-lg">Edit Courses at Admin page</a>
                 {% else %}
                     <!-- <h1>Welcome, {{ request.user.first_name }}</h1> -->
                     <h1>Welcome, <i>{{ student_p.std_first }}</i></h1><br>
