@@ -1,0 +1,39 @@
+{% extends 'users/layout.html' %}
+
+{% block navbar %}
+
+    <li><a href="{% url 'users:index' %}">Home</a></li>
+    <li><a href="{% url 'users:login' %}">Login</a></li>
+
+{% endblock %}
+
+{% block body %}
+
+<div class="login">
+
+    <div class="content">
+
+        <form action="{% url 'users:login' %}" method="post" class="form1">
+            {% csrf_token %}
+            <h3>Login</h3>
+                <div class="msg"><b>
+                    {% if message %}
+                    {{ message }}
+                    {% endif %}
+                </b></div>
+            
+            <div class="userpass">
+                <input type="text" name="username" placeholder="Student ID" class="user">
+                <input type="password" name="password" placeholder="Password" class="pass">
+            </div>
+            <div class="button">
+                <input type="submit" value="SIGN IN" class="button1">
+                <br><br>
+                <a href="/admin" class="button2">Admin Login Site ></a>
+            </div>
+        </form>
+    
+    </div>  
+</div>
+
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends 'users/layout.html' %}
+
+{% block navbar %}
+
+<li><a href="{% url 'users:index' %}">Courses</a></li>
+<li><a href="{% url 'users:logout' %}">Logout</a></li>
+
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <br><br>
+    <h3>Course List</h3><br>
+    <ul>
+        <div class="search">
+            <form class="input-group" action="{% url 'courses:search' %}">
+                {% csrf_token %}
+                <input class="form-control" type="search"
+                    placeholder="Search by Course Code (Sorry, it can't use right now.)" aria-label="Search" name="q"
+                    disabled>
+                <button class="btn btn-outline-secondary" type="submit" disabled>Search <i
+                        class="fas fa-search"></i></button>
+            </form>
+        </div>
+
+        <br>
+
+        <table class="table table-striped table-hover">
+
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">
+                        <h5>Semester/Year</h5>
+                    </th>
+                    <th scope="col">
+                        <h5>Course Code</h5>
+                    </th>
+                    <th scope="col">
+                        <h5>Course Name</h5>
+                    </th>
+                    <th scope="col">
+                        <h5 class="text-danger">Quota</h5>
+                    </th>
+                    <th scope="col">
+                        <h5 class="text-success">Status</h5>
+                    </th>
+
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for course in courselist %}
+                <tr>
+                    <td>{{ course.semester }}/{{ course.year }}</td>
+                    <td>{{ course.c_code }}</td>
+                    <td>{{ course.c_name }}</td>
+                    <td>{{ course.quota }}</td>
+                    <td>
+                        {% if course.status != True and std not in course.enrolled.all %}
+                        <form method="post" action="cancel">
+                            {% csrf_token %}
+                            <button type="button" class="btn btn-secondary" disabled>Closed</button>
+                        </form>
+                        {% elif std not in course.enrolled.all and course.quota >= course.enrolled.all.count %}
+                        <form method="post" action="enroll">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary" name="enroll"
+                                value="{{ course.id }}">Enroll</button>
+                        </form>
+                        {% elif std in course.enrolled.all %}
+                        <form method="post" action="cancel">
+                            {% csrf_token %}
+                            {% if std in course.enrolled.all and course.status == True %}
+                            <button type="submit" class="btn btn-warning" name="cancel"
+                                value="{{ course.id }}">Cancel</button>
+                            {% else %}
+                            <button type="submit" class="btn btn-warning" name="cancel" value="{{ course.id }}"
+                                onclick="return confirm('The course is closed. If you cancel the enrollment, you will not be able to enroll in this course again.');">Cancel</button>
+                            {% endif %}
+                        </form>
+                        {% else %}
+                        <button type="button" class="btn btn-danger" disabled>Full</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+    </ul>
+
+    <br>
+    <h3>{{ std.std_first }}'s Enrolled List</h3><br>
+    {% for course in enrolled %}
+    <li>
+        <h5 class="text-success">+ &nbsp;{{ course }}</h5>
+    </li>
+    {% empty %}
+    <li> &nbsp;No Course Enrolled.</li>
+    {% endfor %}
+
+    <center>
+        <br><br>
+        <a href="{% url 'users:index' %}" class="btn btn-info btn-lg">
+            < Back to My Courses</a>
+                <br><br><br>
+    </center>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'users/layout.html' %}
+
+{% block navbar %}
+    {% if user.is_superuser %}
+        <li><a href="{% url 'users:index' %}">Home</a></li>
+        <li><a href="{% url 'users:logout' %}">Logout</a></li>
+    {% else %}
+        <li><a href="{% url 'users:index' %}">My Courses</a></li>
+        <li><a href="{% url 'users:logout' %}">Logout</a></li>
+    {% endif %}
+
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <center>
+    <div class="index">
+        <div class="content">
+            <div class="checkauth">
+                <br><br><br>
+                {% if user.is_superuser %}
+                    <h1>Welcome, <i>{{ request.user.username.title }}</i></h1><br>
+                    <ul>
+                        <li><h5>Username: &nbsp;<i>{{ request.user.username }}</i></h5></li>
+                        <li><h5>Email: &nbsp;<i>{{ request.user.email }}</i></h5></li>
+                    </ul>
+                    
+                    <h2>Student List</h2>
+                    {% for std in all_students %}
+                        {% if std.is_superuser %} 
+                            <p style="display: inline;">----------------------</p>
+                        {% else %}
+                            <li><h5>{{ std }}</h5></li>
+                        {% endif %}
+                    {% empty %}
+                        <li>No Student.</li>
+                    {% endfor %}
+
+                    <br><br>
+                    <a href="/admin" class="button1">Edit Courses at Admin page</a>
+                {% else %}
+                    <!-- <h1>Welcome, {{ request.user.first_name }}</h1> -->
+                    <h1>Welcome, <i>{{ student_p.std_first }}</i></h1><br>
+                    <ul>
+                        <li><h5>Name: &nbsp;<i>{{ student_p.std_first }} {{ student_p.std_last }}</i></h5></li>
+                        <li><h5>Studen ID: &nbsp;<i>{{ student_p.std_id }}</i></h5></li>
+                        <li><h5>Email: &nbsp;<i>{{ student_p.email }}</i></h5></li>
+                    </ul>
+                    <br>
+
+                    <h2 class="text-success">Enrolled List</h2><br>
+
+                    <ul>
+                    <table class="table table-striped">
+                        
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">
+                                    <h5>Semester/Year</h5>
+                                </th>
+                                <th scope="col">
+                                    <h5>Course Code</h5>
+                                </th>
+                                <th scope="col">
+                                    <h5>Course Name</h5>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for en in enrolled %}
+                            <tr>
+                                <td>{{ en.course.semester }}/{{ en.course.year }}</td>
+                                <td>{{ en.course.c_code }}</td>
+                                <td>{{ en.course.c_name }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                    </ul>
+                    
+                    <!-- {% for course in enrolled %}
+                        <li>{{ course }}</li>
+                    {% empty %}
+                        <li>No Course Enrolled.</li>
+                    {% endfor %} -->
+                    <br>
+                    {% if enrolled.all.count > 1 %}
+                        <h5>Total: {{ enrolled.all.count }} Courses</h5>
+                    {% else %}
+                        <h5>Total: {{ enrolled.all.count }} Course</h5>
+                    {% endif %}
+                    <br>
+
+                    <a href="{% url 'courses:course_view' %}" class="btn btn-info btn-lg">View All Courses ></a>
+                {% endif %}
+            </div>
+            <br>
+            <a href="{% url 'users:logout' %}" class="btn btn-outline-dark">Logout</a><br><br><br>
+        </div>  
+    </div>
+    </center>
+</div>
+
+{% endblock %}
