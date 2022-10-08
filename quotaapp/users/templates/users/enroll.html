@@ -2,7 +2,7 @@
 
 {% block navbar %}
 
-<li><a href="{% url 'users:index' %}">Courses</a></li>
+<li><a href="{% url 'users:index' %}">My Courses</a></li>
 <li><a href="{% url 'users:logout' %}">Logout</a></li>
 
 {% endblock %}
@@ -58,20 +58,22 @@
                     <td>{{ course.quota }}</td>
                     <td>
                         {% if course.status != True and std not in course.enrolled.all %}
-                        <form method="post" action="cancel">
+                        <form method="post" action="">
                             {% csrf_token %}
                             <button type="button" class="btn btn-secondary" disabled>Closed</button>
                         </form>
                         {% elif std not in course.enrolled.all and course.quota >= course.enrolled.all.count %}
-                        <form method="post" action="enroll">
+                        <form method="post" action={% url 'courses:enroll' %}>
                             {% csrf_token %}
+                            <input type="hidden" name="user" value="{{ request.user.username }}">
                             <button type="submit" class="btn btn-primary" name="enroll"
                                 value="{{ course.id }}">Enroll</button>
                         </form>
                         {% elif std in course.enrolled.all %}
-                        <form method="post" action="cancel">
+                        <form method="post" action={% url 'courses:cancel' %}>
                             {% csrf_token %}
                             {% if std in course.enrolled.all and course.status == True %}
+                            <input type="hidden" name="user" value="{{ request.user.username }}">
                             <button type="submit" class="btn btn-warning" name="cancel"
                                 value="{{ course.id }}">Cancel</button>
                             {% else %}
@@ -93,7 +95,7 @@
 
     <br>
     <h3>{{ std.std_first }}'s Enrolled List</h3><br>
-    {% for course in enrolled %}
+    {% for course in course_enrolled %}
     <li>
         <h5 class="text-success">+ &nbsp;{{ course }}</h5>
     </li>

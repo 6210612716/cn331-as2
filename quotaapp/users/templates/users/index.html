@@ -43,7 +43,7 @@
                     <h1>Welcome, <i>{{ student_p.std_first }}</i></h1><br>
                     <ul>
                         <li><h5>Name: &nbsp;<i>{{ student_p.std_first }} {{ student_p.std_last }}</i></h5></li>
-                        <li><h5>Studen ID: &nbsp;<i>{{ student_p.std_id }}</i></h5></li>
+                        <li><h5>Student ID: &nbsp;<i>{{ student_p.std_id }}</i></h5></li>
                         <li><h5>Email: &nbsp;<i>{{ student_p.email }}</i></h5></li>
                     </ul>
                     <br>
@@ -67,11 +67,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for en in enrolled %}
+                            {% for en in courselist %}
                             <tr>
-                                <td>{{ en.course.semester }}/{{ en.course.year }}</td>
-                                <td>{{ en.course.c_code }}</td>
-                                <td>{{ en.course.c_name }}</td>
+                                <td>{{ en.semester }}/{{ en.year }}</td>
+                                <td>{{ en.c_code }}</td>
+                                <td>{{ en.c_name }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -85,10 +85,10 @@
                         <li>No Course Enrolled.</li>
                     {% endfor %} -->
                     <br>
-                    {% if enrolled.all.count > 1 %}
-                        <h5>Total: {{ enrolled.all.count }} Courses</h5>
+                    {% if courselist.all.count > 1 %}
+                        <h5>Total: {{ courselist.all.count }} Courses</h5>
                     {% else %}
-                        <h5>Total: {{ enrolled.all.count }} Course</h5>
+                        <h5>Total: {{ courselist.all.count }} Course</h5>
                     {% endif %}
                     <br>
 

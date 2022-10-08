@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
-from courses.models import Course, Quota
+from courses.models import Course
 from .models import Student
 
 # Create your views here.
@@ -20,10 +20,10 @@ def index(request):
             })
         else:
             students = Student.objects.get(user=request.user)
-            enrolled = Quota.objects.filter(student=students)
+            courses = Course.objects.filter(enrolled=students)
             return render(request, 'users/index.html', {
-                'enrolled': enrolled,
                 'student_p': students,
+                'courselist': courses,
         })
 
 def login_view(request):

@@ -20,16 +20,8 @@ class Course(models.Model):
     enrolled = models.ManyToManyField(Student, blank=True, related_name='enrolled')
 
     def __str__(self):
+        #  '[QUOTA: {self.quota}, STATUS: CLOSED]'
         if self.status == True:
-            return f'{self.semester}/{self.year} {self.c_code} ({self.c_name}) [QUOTA: {self.quota}, STATUS: OPENED]'
+            return f'{self.semester}/{self.year} {self.c_code} ({self.c_name})'
         else:
-            return f'{self.semester}/{self.year} {self.c_code} ({self.c_name}) [QUOTA: {self.quota}, STATUS: CLOSED]'
-
-class Quota(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='courses', null=True)
-    student = models.ForeignKey('users.Student', on_delete=models.CASCADE, related_name='students', null=True)
-    date_created = models.DateTimeField(auto_now_add=True, null=True)
-
-    def __str__(self):
-        # return f'{self.course} [Enrolled Date {self.date_created} by: {self.student}]'
-        return f'{self.course.semester}/{self.course.year} {self.course.c_code} ({self.course.c_name}) on {self.date_created}'
+            return f'{self.semester}/{self.year} {self.c_code} ({self.c_name})'
